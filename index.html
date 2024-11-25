@@ -3,6 +3,18 @@
 
 <head>
   <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #222;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
     .center {
       transform: translate(-50%, -50%);
       position: absolute;
@@ -12,6 +24,12 @@
 
     .container {
       border: 3px solid black;
+      background-color: #333;
+      overflow: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
 
     .row {
@@ -21,9 +39,10 @@
 
     .cell {
       background: #111;
-      width: 25px;
-      height: 25px;
+      width: 10px;
+      height: 10px;
       box-sizing: border-box;
+      transition: background-color 0.2s;
     }
 
     .left-wall {
@@ -70,6 +89,7 @@
       width: 100%;
       justify-content: center;
       align-items: center;
+      margin-top: 10px;
     }
 
     button {
@@ -78,6 +98,13 @@
       background: white;
       padding: 10px;
       box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.4);
+      cursor: pointer;
+      transition: background-color 0.2s, transform 0.2s;
+    }
+
+    button:hover {
+      background-color: #ddd;
+      transform: scale(1.05);
     }
 
     .passed {
@@ -119,6 +146,17 @@
       padding: 20px;
       border-radius: 10px;
       display: none;
+      animation: fadeOut 3s forwards;
+    }
+
+    @keyframes fadeOut {
+      0% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+        display: none;
+      }
     }
 
     .custom-size {
@@ -131,6 +169,13 @@
     .custom-size input {
       width: 50px;
       margin-right: 10px;
+      padding: 5px;
+      border-radius: 5px;
+      border: none;
+    }
+
+    .custom-size button {
+      padding: 5px 10px;
     }
   </style>
 </head>
@@ -144,6 +189,7 @@
     <button onclick="generateMaze(30)">Normal (30 x 30)</button>
     <button onclick="generateMaze(50)">Hard (50 x 50)</button>
     <button onclick="generateMaze(100)">Hell (100 x 100)</button>
+    <button onclick="generateMaze(500)">SuperHell (500 x 500)</button>
     <button onclick="resetMaze()">Reset</button>
     <button onclick="solveMaze(grid)">Solve</button>
     <button onclick="print()">인쇄하기</button>
@@ -153,7 +199,7 @@
   <div class="message">Maze Completed!</div>
 
   <div class="custom-size">
-    <input type="number" id="customSize" min="10" max="100" value="30">
+    <input type="number" id="customSize" min="10" max="1000" value="30">
     <button onclick="generateMaze(parseInt(document.getElementById('customSize').value))">Custom Size</button>
   </div>
 
@@ -308,6 +354,7 @@
         if (x === n - 1 && y === n - 1) {
           document.querySelector(".message").style.display = "block";
           stopTimer();
+          playCompletionSound();
         }
       };
     }
@@ -376,6 +423,11 @@
       stopTimer();
       document.querySelector(".timer").textContent = "00:00";
       generateMaze(parseInt(document.getElementById('customSize').value));
+    }
+
+    function playCompletionSound() {
+      const audio = new Audio('https://www.soundjay.com/button/beep-07.wav');
+      audio.play();
     }
 
     generateMaze(30);
